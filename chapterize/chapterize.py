@@ -4,13 +4,13 @@ import re
 import os
 
 @click.command()
-@click.argument('book')
+@click.argument('books', nargs=-1) # MM
 @click.option('--nochapters', is_flag=True, default=False, help="Don't actually split the book into chapters. Just extract the inner text.")
 @click.option('--stats', is_flag=True, default=False, help="Don't actually split the book into chapters. Just return statistics about the chapters.")
 @click.option('--verbose', is_flag=True, help='Get extra information about what\'s happening behind the scenes.')
 @click.option('--debug', is_flag=True, help='Turn on debugging messages.')
 @click.version_option('0.1')
-def cli(book, nochapters, stats, verbose, debug):
+def cli(books, nochapters, stats, verbose, debug):
     """ This tool breaks up a plain text book into chapters.
     It works especially well with Project Gutenberg plain text ebooks.
     This may also be used to strip metatextual text (tables of contents,
@@ -24,9 +24,9 @@ def cli(book, nochapters, stats, verbose, debug):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
 
-    logging.info('Now attempting to break the file %s into chapters.' % book)
-
-    bookObj = Book(book, nochapters, stats)
+    for book in books: #MM
+        logging.info('Now attempting to break the file %s into chapters.' % book)
+        bookObj = Book(book, nochapters, stats)
 
 class Book():
     def __init__(self, filename, nochapters, stats):
